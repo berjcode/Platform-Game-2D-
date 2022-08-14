@@ -27,6 +27,18 @@ public class PlayerController : MonoBehaviour
     //Character Rotate
 
     bool facingRight = true;
+
+
+    //Player Health
+    internal int maxPlayerHealth=100;
+    public int currentPlayerHealth;
+    public bool isHurt;
+
+    Enemy enemyCs;
+
+    //PlayerDead
+    internal bool isDead;
+
     void Start()
     {
         // Rigibody Settings
@@ -36,8 +48,28 @@ public class PlayerController : MonoBehaviour
         rigibody.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         //GroundCheck Bulduk
         groundCheck = transform.Find("GroundCheck");
+
+        //PlayerHealth 
+        currentPlayerHealth = maxPlayerHealth;
+        //EnemyCS
+        enemyCs = FindObjectOfType<Enemy>();
+
+        
+
     }
-   
+
+    private void Update()
+    {
+        ReduceHealth();
+        if(currentPlayerHealth> maxPlayerHealth)
+        {
+            currentPlayerHealth = maxPlayerHealth;
+        }
+
+        isDead = currentPlayerHealth == 0;
+        
+    }
+
 
     void FixedUpdate()
     {
@@ -70,6 +102,15 @@ public class PlayerController : MonoBehaviour
             theScale.x *= -1;
 
             transform.localScale = theScale;
+        }
+    }
+    //Health--
+    void ReduceHealth()
+    {
+        if(isHurt)
+        {
+            currentPlayerHealth -= enemyCs.damage;
+            isHurt = false;
         }
     }
 }
